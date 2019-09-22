@@ -61,7 +61,7 @@ ML-Toolkit        | 0.3.2
 
 ## The Data
 
-This project focuses on 6 states within the US, over a period of 10 years. Data was taken from ~800 gauge sites, between July 2009 and June 2019. Not all gauge sites had continuous historical data over the period, but all the available data for each site was used. 
+This project focused on 6 states within the US, over a period of 10 years. Data was taken from ~800 gauge sites, between July 2009 and June 2019. Not all gauge sites had continuous historical data over the period, but all the available data for each site was used. 
 
 The six states were:
 
@@ -78,7 +78,7 @@ Required datasets and providers:
 
 _USGS_
 
-USGS provided their Surface Water [dataset](https://waterdata.usgs.gov/nwis/sw). This consisted of the height of a stream as measured by gauges for over 11,000 sites in the US. The data was updated every 15 minutes, with some locations having historical data for over 50 years. As previously mentioned, the data chosen in this case was a subset of these sites based on geographical location.
+USGS provided their Surface Water [dataset](https://waterdata.usgs.gov/nwis/sw). This consists of the height of a stream as measured by gauges for over 11,000 sites in the US. The data is updated every 15 minutes, with some locations having historical data for over 50 years. As previously mentioned, the data chosen in this case was a subset of these sites based on geographical location.
 
 
 _PRISM_
@@ -96,7 +96,7 @@ _National Hydrology Dataset Plus (NHDPlus)_
 
 _Flooded Locations And Simulated Hydrographs Project (FLASH)_
 
-[FLASH](https://blog.nssl.noaa.gov/flash/) is a database containing information about flood events within the US. The main goal of the FLASH project was to improve the accuracy and timing when predicting these flash floods. The information used from this dataset was the time taken for a river to reach its peak height after a major rain event.
+[FLASH](https://blog.nssl.noaa.gov/flash/) is a database containing information about flood events within the US. The main goal of the FLASH project is to improve the accuracy and timing when predicting these flash floods. The information used from this dataset was the time taken for a river to reach its peak height after a major rain event.
 
 _NOAA_
 
@@ -120,7 +120,7 @@ Given the data available, it was possible to split the information into three da
 
 3. Perfect Forecasts: All information contained within the gauged basin dataset, as well as precipitation information around the time of the event.
 
-To obtain these features, the `feat` function was used. This enabled previous information along with windowed features to be extracted. This function takes the following parameters as input:
+To obtain these features, the `feat` function was used to extract previous information along with windowed features. This function takes the following parameters as input:
 
 -	`x` table that is being updated
 -	`y` how many values to calculate (integer list)
@@ -209,7 +209,7 @@ The target data used in this case was the Flood level warning, extracted from th
 
 The latitude and longitude of these provided thresholds did not exactly match the stream gauge locations. As such, the latitudes and longitudes of both the stream locations and NOAA threshold readings were joined using a k-dimensional tree (kd-tree) nearest neighbours algorithm. This algorithm is explained in Appendix 1 at the end of this paper. 
 
-The code used to achieve this nearest neighbours calculation is seen below with the algorithm implementation contained in full in the github repository associated with this paper. 
+The code used to achieve this nearest neighbours calculation is seen below, with the algorithm implementation contained in full in the github repository associated with this paper. 
 
 ```q
 q)wlatl:raze each warning[`Latitude`Longitude],'gauges[`dec_lat_va`dec_long_v]
@@ -270,7 +270,7 @@ _Monthly Model_
 
 After joining the stream height and precipitation tables from USGS and PRISM, the dataset was then broken up into monthly values. By taking the first day of each month at a site, it was possible to obtain the maximum moving averages of precipitation for different window sizes for a given month, along with the precipitation and height values for the last few days of the month prior. This data was then joined to the `stream_char` dataset, which consisted of the basin and landcover characteristcs, and the “threshold” dataset, based on month and site number.
 
-Lagged features were then added to this dataset, which included information like did a flood occur in the month prior, the year prior and also how often on average did the given location flood.
+Lagged features were then added to this dataset, which included information such as whether a flood occurred in the month or year prior.
 
 ```q
 q)all_monthly_data:window_feat[all_monthly_data;enlist 1 12;`target;();site_d;`lagged;!]
@@ -377,10 +377,9 @@ q)peak_split:update split:`TEST from cleaned_peak where site_no in`$tts[1]
 
 ## Building Models
 	 	 	
-For both problems a variety of models were tested, but for the sake of this paper, models and results from an eXtreme Gradient Boost (XGBoost) and random forest classifier are presented below. These models were chosen due to the models ability to deal with complex, imbalanced datasets. With this type of dataset, overfitting is a common feature. Overfitting occurs when the model fits too well to the training set, capturing a lot of the noise from the data. This leads to the model preforming successfully in training, while not succeeding as well on the testing or validation sets. Another problem that can occur, is that a naive model can be produced, always predicting that a flood will not occur. This leads to high acccuracy but not meaningful results. As seen below in the results section, XGBoosts and random forests were able to deal much better with these issues by tuning their respective hyper-parameters. A more detailed description of these models can be found in Appendix 2.
+For both problems a variety of models were tested, but for the sake of this paper, models and results from an eXtreme Gradient Boost (XGBoost) and random forest classifier are presented below. These models were chosen due to their ability to deal with complex, imbalanced datasets. With this type of dataset, overfitting is a common feature. Overfitting occurs when the model fits too well to the training set, capturing a lot of the noise from the data. This leads to the model preforming successfully in training, while not succeeding as well on the testing or validation sets. Another problem that can occur, is that a naive model can be produced, always predicting that a flood will not occur. This leads to high acccuracy but not meaningful results. As seen below in the results section, XGBoost and random forest models were able to deal better with these issues by tuning their respective hyper-parameters. A more detailed description of these models can be found in Appendix 2.
 
-To visualise the results, a precision-recall curve was used, illustrating the trade off between the positive predictive value and the true positive rate over a variety of probability thresholds <sup> [7]</sup>. This is a good metric to measure the success of a model when the classes are unbalanced, compared with similar graphs such as the ROC curve. Precision and recall were also used because getting a balance between these metrics when predicting floods, was vital to ensure that all floods were given warnings. Yet also to ensure that a low number of false positives were given, the penalty for which was that warnings would be ignored.  
-
+To visualize the results, a precision-recall curve was used, illustrating the trade off between the positive predictive value and the true positive rate over a variety of probability thresholds <sup> [7]</sup>. This is a good metric to measure the success of a model when the classes are unbalanced, compared with similar graphs such as the ROC curve. Precision and recall were also used because getting a balance between these metrics when predicting floods, was vital to ensure that all floods were given warnings. Yet also to ensure that a low number of false positives were given, the penalty for which was that warnings would be ignored.  
 
 A function named `pr_curve` was created to output the desired results from the models. This function outputs the accuracy of prediction, the meanclass accuracy, a classification report highlighting the precision and recall per class, along with a precision-recall curve. This function also returned the prediction at each location in time for the models used, this can be seen later in this paper to create a map of flooding locations.
 
@@ -391,7 +390,7 @@ The inputs to the `pr_curve` function are:
 -	`dictionary of models that are being used`
 
 
-The dictionary of models, consisted of XGBoost and a random forest model, with varying hyper-parameters for each model. 
+The dictionary of models consisted of XGBoost and a random forest model, with varying hyper-parameters for each model. 
 
 ```q
 q)build_model:{[Xtrain;ytrain;dict]
@@ -591,7 +590,7 @@ In the above case, the XGBoost classifier achieved the hightest accuracy score i
 
 ### Feature Significance
 
-There was also a lot to be learned from determining which features contributed to predicting the target for each model. To do this, the function ```ml.fresh.significantfeatures``` was applied to the data, to return the statistically significant features based on a p-value. Combining this with ```ml.fresh.ksigfeat[x]``` enabled the top x most significant features to be extracted from each dataset. 
+There is also a lot to be learned from determining which features contribute to predicting the target for a model. To do this, the function ```ml.fresh.significantfeatures``` was applied to the data, to return the statistically significant features based on a p-value. Combining this with ```ml.fresh.ksigfeat[x]``` enabled the top x most significant features to be extracted from each dataset. 
 
 _Monthly Model_
 
@@ -649,7 +648,7 @@ q)string .ml.fresh.significantfeatures[flip forecast[`P]!cleaned_peak[forecast[`
 
 _Monthly Model_
 
-Using these results, it was also possible to build a map that highlighted per month which areas were at risk of flooding. This could be used by governmental bodies to prioritize funding in the coming weeks.
+Using these results, it was also possible to build a map highlighting which areas are at risk of flooding each month. This could be used by governmental bodies to prioritize funding in the coming weeks.
 
 ```q
 q)preds:last pltP1`model
@@ -663,7 +662,7 @@ q)graphs[`df pykw dfnew][`:render][];
 
 _Time to Peak Model_ 
 
-Data relating to the peak height of a stream from an actual flooding event was also compared with the upper bound peak time from our model.
+Data relating to the peak height of a stream from an actual flooding event, was compared with the upper bound peak time from our model.
 
 ```q
 q)pred:last pltU2`model
@@ -699,9 +698,9 @@ For the monthly models, the future weather predictions played an important role 
 
 The opposite was true for the time-peak values, as previous rain and stream gauge information along with the basin characteristics were seen to be the most significant features when predicting these values. Including additional information about the future predicted rainfall decreased the accuracy of the results, with the best results being obtained from the model with only past rainfall and basin and soil characteristics being fed into the model.
 
-Both of these results are likely be physically expected. In the case of the monthly prediction, information regarding future forecast was pivotal in whether an area will flood in the next month. Whereas in the case of a time to peak value, it would be unlikely that information about rainfall in the next number of days would add to the predictive power of a model.
+Both of these results might have been physically expected. In the case of the monthly prediction, information regarding future forecast is pivotal in whether an area will flood in the next month. Whereas in the case of a time to peak value, it would be unlikely that information about rainfall in the next number of days would add to the predictive power of a model.
 
-Knowing what features contribute to flood susceptibility and the length of time it takes for a river to reach its peak height, is an important piece of information to extract from the model. From this, organizations such as USGS can better prepare for flood events and understand how changing climates and placement of impervious surface can affect the likelihood of flooding.
+Knowing which features contribute to flood susceptibility, and the length of time taken for a river to reach its peak height, are important pieces of information to extract from the model. From this, organizations such as USGS can better prepare for flood events and understand how changing climates and placement of impervious surface can affect the likelihood of flooding.
 
 The best results from the models above were obtained by continuously adjusting the hyper-parameters of the model. The unbalanced target data in the monthly model, meant that weighting the classes was an important feature to experiment with. This was particularly important when trying to obtain high precision and recall results. Between the two models, balance in the recall and precision was better for the XGBoost model.
 
@@ -750,14 +749,14 @@ Ensemble Methods
 
 An ensemble learning algorithm combines multiple outputs from a wide variety of predictors to achieve improved results. A combination of "weak" learners are typically used with the objective to achieve a "strong" learner. A weak predictor is a classifier that is only slightly correlated to the true predictions, while a strong learner is highly correlated. One of the advantages of using ensemble methods is that overfitting is reduced by diversifying the set of predictors used and averaging the outcome, lowering the variance in the model. 
 
-XGBoosts
+XGBoost
 
-XGBoosts, commended for its speed and performance, is an ensemble method built on a gradient boosting framework of decision trees. This method utilises boosting techniques by building the model sequentially, using the results from the previous step to improve the next. This method relies on subsequent classifiers to learn from the mistakes of the previous classifier. 
+XGBoost, commended for its speed and performance, is an ensemble method built on a gradient boosting framework of decision trees. This method utilises boosting techniques by building the model sequentially, using the results from the previous step to improve the next. This method relies on subsequent classifiers to learn from the mistakes of the previous classifier. 
 
 
 Random Forests
 
-This is also an ensemble method, where classifiers are trained independently using a randomized subsample of the data. This randomness reduces overfitting, while making the model more robust than if just a single decision tree was used. To obtain the output of the model, the decisions of multiple trees are merged together, represented by the average.
+Random Forests are an ensemble learning method, where classifiers are trained independently using a randomized subsample of the data. This randomness reduces overfitting, while making the model more robust than if just a single decision tree was used. To obtain the output of the model, the decisions of multiple trees are merged together, represented by the average.
 
 ![Figure 11](imgs/rand-forest.png)<br/>
 <small>_Visual Representation of a random forest <sup>[8]<sup>_</small> 
