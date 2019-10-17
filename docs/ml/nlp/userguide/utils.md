@@ -85,4 +85,22 @@ fileName path                                           text                 ..
 100.     :./datasets/maildir/skilling-j/_sent_mail/100. "Message-ID: <47397.1..
 101.     :./datasets/maildir/skilling-j/_sent_mail/101. "Message-ID: <2486283..
 ```
+## `.nlp.detectLang`
+
+_Detect the language of a piece of text_
+
+Syntax: `.nlp.detectLang x`
+
+Where `x` is a string a text, returns a symbol predicting the language of the given text.
+
+```q
+q).nlp.detectLang "This is a sentence"
+`en
+
+q).nlp.detectLang"Das ist ein Satz"
+`de
+
+q).nlp.detectLang"C'est une phrase"
+`fr
+```
 

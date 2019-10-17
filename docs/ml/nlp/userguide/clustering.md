@@ -147,7 +147,7 @@ Where
 -   `docs` is a list of documents or document keywords (table or a list of dictionaries)
 -   `numOfClusters` is the number of clusters (long)
 
-returns a list of list of longs, the documents’ indexes, grouped into clusters.
+returns a list of longs, the documents’ indexes, grouped into clusters.
 
 Group Jeff Skilling’s emails into 60 clusters:
 
