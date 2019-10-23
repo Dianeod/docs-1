@@ -49,7 +49,54 @@ q).nlp.findDates "I am going on holidays on the 12/04/2018 to New York and come 
 2018.04.18 2018.04.18 "18.04.2018" 74 84
 ```
 
+## `.nlp.findRegex`
 
+_Find regular expressions within a text_
+
+Syntax: `.nlp.findRegex[text;expr]`
+
+Where 
+
+-  `text` is the string of text to extract the regular expressions from 
+-  `expr` is the expression type to be searched for within the text
+
+returns the expression along with the indices within the expression occurs.
+
+The optional expressions that can be searched for in the text are
+ 
+- `specialChars`
+- `money`
+- `phoneNumber`
+- `emailAddress`
+- `url`
+- `zipCode`
+- `postalCode`
+- `postalOrZipCode`
+- `dtsep` (date separator)
+- `day`
+- `month`
+- `year`
+- `yearfull`
+- `am`
+- `pm`
+- `time12`
+- `time24`
+- `time`
+- `yearmonthList`
+- `yearmonthdayList`
+- `yearmonth`
+- `yearmonthday`
+
+
+```q
+q)txt:"You can call the number 123 456 7890 or email us on name@email.com in book an 
+   appoinment for January,February and March for £30.00"
+q)findRegex[txt]each `phoneNumber`emailAddress`yearmonthList`money
+,(" 123 456 7890";23;36)
+,("name@email.com";52;66)
+(("January";93;100);("February";101;109);("March";114;119);("30";125;127);("0..
+,("\302\24330.00";124;130)
+```
 ## `.nlp.getSentences`
 
 _A document partitioned into sentences._
@@ -64,6 +111,17 @@ q) .nlp.getSentences corpus[0]
 "CHAPTER 1\n\n  Loomings\n\n\n\nCall me Ishmael."
 " Some years ago--never mind how long precisely-- having little or no money in my purse, and noth..
 " It is a way I have of driving off the spleen and regulating the circulation."
+"Whenever I find myself growing grim about the mouth; whenever it is a damp, drizzly November in ..
+" This is my substitute for pistol and ball."
+"With a philosophical flourish Cato throws himself upon his sword; I quietly take to the ship."
+" There is nothing surprising in this."
+"If they but knew it, almost all men in their degree, some time or other, cherish very nearly the..
+"\n\nThere now is your insular city of the Manhattoes, belted round by wharves as Indian isles by..
+"Right and left, the streets take you waterward."
+" Its extreme downtown is the battery, where that noble mole is washed by waves, and cooled by br..
+"Look at the crowds of water-gazers there."
+"\n\nCircumambulate the city of a dreamy Sabbath afternoon."
+..
 ```
 
 
@@ -76,7 +134,7 @@ Syntax: `.nlp.loadTextFromDir x`
 Where `x` is the directory’s filepath as a string, returns a table of filenames, paths and texts.
 
 ```q
-q).nlp.loadTextFromDir["/home/kx/nlp/datasets/maildir/skilling-j"]
+q).nlp.loadTextFromDir["./datasets/maildir/skilling-j"]
 
 fileName path                                           text                 ..
 -----------------------------------------------------------------------------..
@@ -85,22 +143,63 @@ fileName path                                           text                 ..
 100.     :./datasets/maildir/skilling-j/_sent_mail/100. "Message-ID: <47397.1..
 101.     :./datasets/maildir/skilling-j/_sent_mail/101. "Message-ID: <2486283..
 ```
-## `.nlp.detectLang`
 
-_Detect the language of a piece of text_
+## Remove characters
 
-Syntax: `.nlp.detectLang x`
+_Remove characters from a string of text_
 
-Where `x` is a string a text, returns a symbol predicting the language of the given text.
+### `nlp.rmv_custom`
+
+_Remove aspects of a string of text containing certain characters_
+
+Syntax: `.nlp.rmv_custom[text;char]
+
+Where
+
+- `text` is a string of text
+- `char` is a list of characters determining what should be removed from the text
+
+returns the string a text without anything that contains the defined characters 
 
 ```q
-q).nlp.detectLang "This is a sentence"
-`en
+q)rmv_list   :("http*";"rt";"*,";"*&*";"*[0-9]*")
+q)(jeffemails`text)100
+"Re:\n\nHow much to you have?!  SRS\n\n\n\n\nKevin Hannon @ ENRON COMMUNICATIONS on 04/20/2001 08..
+q).nlp.rmv_custom[(jeffemails`text)100;rmv_list]
+"much to you  SRS\n\n\n\n\nKevin Hannon ENRON COMMUNICATIONS on  \n\n\nOK Sherri how much do you ..
+```
 
-q).nlp.detectLang"Das ist ein Satz"
-`de
+### `.nlp.rmv_master`
 
-q).nlp.detectLang"C'est une phrase"
-`fr
+_Remove certain characters from a string of text and replace them_
+
+Syntax: `.nlp.rmv_master[text;char;n]`
+
+Where
+
+- `text` is a string of text
+- `char` is the string of characters to be removed 
+- `n` is what the removed characters are to be replaced with
+
+returns the string of text with the characters removed and replaced
+
+```q
+q).nlp.rmv_master[(jeffemails`text)100;",.:?!/@'\n";""]
+"ReHow much to you have  SRSKevin Hannon  ENRON COMMUNICATIONS on 04202001 080314 AMcc  OK Sherri..
+```
+
+### `.nlp.rmv_ascii`
+
+_Remove any asii characters from a string of text_
+
+Syntax: `.nlp.rmv_ascii[text]`
+
+Where `text` is a string of text
+
+returns the string of text with any ascii characters removed
+
+```q
+q).nlp.rmv_ascii["This is ä senteñcê"]
+"This is  sentec"
 ```
 

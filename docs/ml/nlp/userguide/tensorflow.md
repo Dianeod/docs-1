@@ -1,0 +1,138 @@
+---
+author: Diane O'Donoghue
+date: October 2019
+keywords: tensorflow, algorithm, analysis,corpus, document, learning, machine, machine learning,  ml, nlp, token, tokenizing, q, sentiment, vector, wordshape, emoji, punctuation, symbol
+---
+
+# <i class="fas fa-share-alt"></i> Tensorflow Text
+
+Tensorflow text is used to preform preprocessing operations on text based data, allowing this preprocessing to be integrated into a tensorflow machine learning model with ease. This operations include features such as tokenization, sentiment analysis and extracting attributes from strings of text. 
+
+## Tokenization
+
+Tokenization can be preformed using a whitespace and unicode tokenizer. A whitespace tokenizer splits strings by whitespace characters( i.e spaces, new lines and tabs). A unicode script tokenizer splits the strings into tokens based on unicode script boundaries. These boundaries are defined by the International Components for Unicode (ICU) UScriptCode values. More details cna be found at http://icu-project.org/apiref/icu4c/uscript_8h.html.
+
+### `.nlp.tf.tokenize`
+
+_Break up strings into tokens_
+
+Syntax: `.nlp.tf.tokenize[x;y]`
+
+Where 
+
+-  `x` is a string of text 
+-  `y` is the tokenization implemention to be used
+
+returns a list of tokens extracted from the text
+
+The two implementatin options are `whitespace` and `unicode`
+
+```q
+q)show 5#whiteToken:.nlp.tf.tokenize[;`whitespace]each mobyDick
+q)show 5#uniToken:.nlp.tf.tokenize[;`unicode]each mobyDick
+
+`CHAPTER`1`Loomings`Call`me`Ishmael.`Some`years`ago--never`mind`how`long..
+`CHAPTER`2`The`Carpet-Bag`I`stuffed`a`shirt`or`two`into`my`old`carpet-ba..
+`CHAPTER`3`The`Spouter-Inn`Entering`that`gable-ended`Spouter-Inn,`you`fo..
+`CHAPTER`4`The`Counterpane`Upon`waking`next`morning`about`daylight,`I`fo..
+`CHAPTER`5`Breakfast`I`quickly`followed`suit,`and`descending`into`the`ba..
+..
+
+`CHAPTER`1`Loomings`Call`me`Ishmael`.`Some`years`ago`--`never`mind`how`l..
+`CHAPTER`2`The`Carpet`-`Bag`I`stuffed`a`shirt`or`two`into`my`old`carpet`..
+`CHAPTER`3`The`Spouter`-`Inn`Entering`that`gable`-`ended`Spouter`-`Inn`,..
+`CHAPTER`4`The`Counterpane`Upon`waking`next`morning`about`daylight`,`I`f..
+`CHAPTER`5`Breakfast`I`quickly`followed`suit`,`and`descending`into`the`b..
+..
+```
+
+## Text Properties
+
+Properties and patterns from text data can also be extracted and displayed in a table format.
+
+### `.nlp.tf.wordshape`
+
+_Identifies if a string contains certain text attributes_
+
+Syntax: `.nlp.tf.wordshape[txt;tk;att]`
+
+Where
+
+-  `txt` is a string of text
+-  `tk` is the tokenization implemention to be used
+-  `att` are the attributes to identify in the text 
+
+returns a numerical value indicating the index that the attribute occured within each text document. A token column is also added which includes the text split into its appropriate tokens.
+
+The following are the optional attr values:
+
+field       | token description
+------------|-------------------------------------------------------
+`is_punc    | Is a punctuation or symbol
+`has_punc   | Contains punctuation or symbols along with other characters
+`is_mixed   | Consists of only upper and lower case letters
+`is_numeric | Is of numeric value
+`has_numeric| Contains numeric values along with other characters
+`lower      | Is all lower case
+`title      | The first character of the token is of upper case, and remaining lower
+`symbol     | Non-letter characters are found in the token
+`math       | Contains a math symbol
+`currency   | Contains a currency symbol
+`acronym    | Is a period separated acronym
+`is_emoji   | Is an emoji
+`has_emoji  | Contain an emoji character
+
+all available options can be found within the function `.nlp.tf.i.metaDict`
+
+```q
+q)show txtAtt:.nlp.tf.wordshape[;`unicode;key .nlp.tf.i.metaDict]each mobyDick
+is_punc                                                                       ..
+------------------------------------------------------------------------------..
+6 10 16 25 34 51 67 77 83 89 99 110 123 140 145 149 151 166 175 186 193 200 20..
+4 16 18 24 33 41 48 57 73 84 89 107 114 123 126 133 149 155 166 171 186 200 20..
+4 9 12 14 21 23 28 31 42 55 60 71 86 93 106 114 125 134 141 150 155 170 182 18..
+10 14 27 37 43 49 54 71 82 98 108 114 117 131 133 146 155 162 183 188 195 201 ..
+7 13 21 28 45 47 56 64 67 71 73 78 84 93 99 115 126 140 143 159 172 178 181 18..
+30 47 53 69 76 85 95 99 104 112 122 126 133 138 146 149 160 166 168 172 174 17..
+13 16 23 32 43 51 58 67 74 77 83 95 104 106 115 118 122 127 138 149 159 166 18..
+20 25 33 44 55 57 64 70 79 91 104 112 125 139 148 159 168 171 179 192 202 212 ..
+7 22 26 28 33 38 40 42 51 56 64 67 73 80 85 91 94 103 108 128 131 136 155 165 ..
+...
+
+q)cols txtAtt
+`is_punc`has_punc`is_mixed`is_numeric`has_numeric`lower`title`symbol`math`curr..
+```
+
+## Sentimental Analysis
+
+Using the same pre built model that's used in `.nlp.sentiment`, sentences can be scored for their negative, positve and neutral sentiment using tensorflow tokenization. 
+
+### `.nlp.tf.sentiment`
+
+_Sentiments of a sentence using tensorflow tokenization_
+
+Syntax: `.nlp.tf.sentiment[txt;tk]
+
+Where 
+
+- `text` is a string 
+- `tk` is the tokenization to be applied
+
+returns a dictionary or table containing the sentiment of the text.
+
+A run of sentences from _Moby Dick_
+
+```q
+q).nlp.tf.sent[;`unicode]each("Three cheers,men--all hearts alive!";"No,no! shame upon all cowards-shame upon them!")
+compound   pos       neg       neu      
+----------------------------------------
+0.7177249  0.5996797 0         0.4003203
+-0.8802318 0         0.6910529 0.3089471
+
+q).nlp.tf.sent[;`whitespace]each("Three cheers,men--all hearts alive!";"No,no! shame upon all cowards-shame upon them!")
+compound   pos neg      neu     
+--------------------------------
+0          0   0        1       
+-0.5695978 0   0.551167 0.448833
+```
+
