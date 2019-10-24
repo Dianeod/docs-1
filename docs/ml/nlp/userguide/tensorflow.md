@@ -6,11 +6,11 @@ keywords: tensorflow, algorithm, analysis,corpus, document, learning, machine, m
 
 # <i class="fas fa-share-alt"></i> Tensorflow Text
 
-Tensorflow text is used to preform preprocessing operations on text based data, allowing this preprocessing to be integrated into a tensorflow machine learning model with ease. This operations include features such as tokenization, sentiment analysis and extracting attributes from strings of text. 
+Tensorflow text can be used to perform preprocessing operations on text based data. This allows the preprocessed data to be integrated into a tensorflow machine learning workflow with ease. These operations include tokenization, sentiment analysis and extracting attributes from strings of text.
 
 ## Tokenization
 
-Tokenization can be preformed using a whitespace and unicode tokenizer. A whitespace tokenizer splits strings by whitespace characters( i.e spaces, new lines and tabs). A unicode script tokenizer splits the strings into tokens based on unicode script boundaries. These boundaries are defined by the International Components for Unicode (ICU) UScriptCode values. More details cna be found at http://icu-project.org/apiref/icu4c/uscript_8h.html.
+Tokenization can be performed using either a whitespace or unicode tokenizer. A whitespace tokenizer splits strings at whitespace characters( i.e spaces, new lines and tabs). A unicode script tokenizer splits the strings into tokens based on unicode script boundaries. These boundaries are defined by the International Components for Unicode (ICU) UScriptCode values. More details cna be found at http://icu-project.org/apiref/icu4c/uscript_8h.html.
 
 ### `.nlp.tf.tokenize`
 
@@ -21,11 +21,11 @@ Syntax: `.nlp.tf.tokenize[x;y]`
 Where 
 
 -  `x` is a string of text 
--  `y` is the tokenization implemention to be used
+-  `y` is the version of tokenization
 
-returns a list of tokens extracted from the text
+returns a list of the tokens extracted from the text
 
-The two implementatin options are `whitespace` and `unicode`
+The two possible values for `y` are `whitespace` and `unicode`
 
 ```q
 q)show 5#whiteToken:.nlp.tf.tokenize[;`whitespace]each mobyDick
@@ -48,39 +48,37 @@ q)show 5#uniToken:.nlp.tf.tokenize[;`unicode]each mobyDick
 
 ## Text Properties
 
-Properties and patterns from text data can also be extracted and displayed in a table format.
-
 ### `.nlp.tf.wordshape`
 
 _Identifies if a string contains certain text attributes_
 
-Syntax: `.nlp.tf.wordshape[txt;tk;att]`
+Syntax: `.nlp.tf.wordshape[txt;tok;att]`
 
 Where
 
 -  `txt` is a string of text
--  `tk` is the tokenization implemention to be used
--  `att` are the attributes to identify in the text 
+-  `tok` is the form of tokenization to be used
+-  `att` are the attributes to be identified in the text 
 
-returns a numerical value indicating the index that the attribute occured within each text document. A token column is also added which includes the text split into its appropriate tokens.
+returns a numerical value indicating the index that the attribute occured within the string of text. A token column is also added which includes the text split into its appropriate tokens.
 
 The following are the optional attr values:
 
 field       | token description
 ------------|-------------------------------------------------------
-`is_punc    | Is a punctuation or symbol
-`has_punc   | Contains punctuation or symbols along with other characters
-`is_mixed   | Consists of only upper and lower case letters
-`is_numeric | Is of numeric value
-`has_numeric| Contains numeric values along with other characters
-`lower      | Is all lower case
+`is_punc    | Is an element of punctuation or symbol
+`has_punc   | An element contains an element of  punctuation or symbols along with other characters.
+`is_mixed   | Consists of both upper and lower case letters
+`is_numeric | Is a numeric value
+`has_numeric| An element contains numeric values along with other characters
+`lower      | The element of text is all lower case
 `title      | The first character of the token is of upper case, and remaining lower
 `symbol     | Non-letter characters are found in the token
-`math       | Contains a math symbol
+`math       | Contains a mathematical symbol
 `currency   | Contains a currency symbol
 `acronym    | Is a period separated acronym
-`is_emoji   | Is an emoji
-`has_emoji  | Contain an emoji character
+`is_emoji   | Is an individual emoji
+`has_emoji  | The token contains an emoji character
 
 all available options can be found within the function `.nlp.tf.i.metaDict`
 
@@ -105,18 +103,18 @@ q)cols txtAtt
 
 ## Sentimental Analysis
 
-Using the same pre built model that's used in `.nlp.sentiment`, sentences can be scored for their negative, positve and neutral sentiment using tensorflow tokenization. 
+Using the same pre built model used in `.nlp.sentiment`, sentences can be scored for their negative, positve and neutral sentiment using tensorflow tokenization. 
 
 ### `.nlp.tf.sentiment`
 
 _Sentiments of a sentence using tensorflow tokenization_
 
-Syntax: `.nlp.tf.sentiment[txt;tk]
+Syntax: `.nlp.tf.sentiment[txt;tok]`
 
 Where 
 
 - `text` is a string 
-- `tk` is the tokenization to be applied
+- `tok` is the form of tokenization to be implemented
 
 returns a dictionary or table containing the sentiment of the text.
 
