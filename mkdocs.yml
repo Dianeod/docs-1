@@ -466,6 +466,7 @@ nav:
         - Data interrogation: ml/nlp/userguide/analysis.md
         - Utilities: ml/nlp/userguide/utils.md
         - Emails: ml/nlp/userguide/emails.md
+        - Tensorflow: ml/nlp/userguide/tensorflow.md
   - Knowledge Base:
     - Overview: kb/index.md
     - Alternative in-memory layouts: kb/alternative-in-memory-layouts.md
