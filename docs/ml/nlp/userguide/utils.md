@@ -51,7 +51,7 @@ q).nlp.findDates "I am going on holidays on the 12/04/2018 to New York and come 
 
 ## `.nlp.findRegex`
 
-_Find regular expressions within a text_
+_Find regular expressions within a string of text_
 
 Syntax: `.nlp.findRegex[text;expr]`
 
@@ -62,31 +62,31 @@ Where
 
 returns the expression along with the indices within the expression occurs.
 
-The optional expressions that can be searched for in the text are
- 
-- `specialChars`
-- `money`
-- `phoneNumber`
-- `emailAddress`
-- `url`
-- `zipCode`
-- `postalCode`
-- `postalOrZipCode`
-- `dtsep` (date separator)
-- `day`
-- `month`
-- `year`
-- `yearfull`
-- `am`
-- `pm`
-- `time12`
-- `time24`
-- `time`
-- `yearmonthList`
-- `yearmonthdayList`
-- `yearmonth`
-- `yearmonthday`
-
+```
+The optional expressions that can be searched for within the text are as follows:
+    `specialChars
+    `money
+    `phoneNumber
+    `emailAddress
+    `url
+    `zipCode
+    `postalCode
+    `postalOrZipCode
+    `dtsep (date separator)
+    `day
+    `month
+    `year
+    `yearfull
+    `am
+    `pm
+    `time12
+    `time24
+    `time
+    `yearmonthList
+    `yearmonthdayList
+    `yearmonth
+    `yearmonthday
+```
 
 ```q
 q)txt:"You can call the number 123 456 7890 or email us on name@email.com in book an 
@@ -150,14 +150,14 @@ _Remove characters from a string of text_
 
 ### `nlp.rmv_custom`
 
-_Remove aspects of a string of text containing certain characters_
+_Remove aspects of a string of text containing certain characters or expressions_
 
 Syntax: `.nlp.rmv_custom[text;char]
 
 Where
 
 - `text` is a string of text
-- `char` is a list of characters determining what should be removed from the text
+- `char` is a list of characters or expressions to be removed from the text
 
 returns the string a text without anything that contains the defined characters 
 
@@ -171,7 +171,7 @@ q).nlp.rmv_custom[(jeffemails`text)100;rmv_list]
 
 ### `.nlp.rmv_master`
 
-_Remove certain characters from a string of text and replace them_
+_Remove certain individual characters from a string of text and replace them_
 
 Syntax: `.nlp.rmv_master[text;char;n]`
 
@@ -179,7 +179,7 @@ Where
 
 - `text` is a string of text
 - `char` is the string of characters to be removed 
-- `n` is what the removed characters are to be replaced with
+- `n` is the character which will replace the removed character
 
 returns the string of text with the characters removed and replaced
 
@@ -190,13 +190,15 @@ q).nlp.rmv_master[(jeffemails`text)100;",.:?!/@'\n";""]
 
 ### `.nlp.rmv_ascii`
 
-_Remove any asii characters from a string of text_
+_Remove any non-ascii characters from a string of text_
 
 Syntax: `.nlp.rmv_ascii[text]`
 
-Where `text` is a string of text
+Where
 
-returns the string of text with any ascii characters removed
+-  `text` is a string of text
+
+returns the string of text with all non ascii characters removed
 
 ```q
 q).nlp.rmv_ascii["This is ä senteñcê"]

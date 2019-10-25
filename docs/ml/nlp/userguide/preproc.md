@@ -141,7 +141,11 @@ _TF-IDF scores for terms in each document of a corpus_
 
 Syntax: `.nlp.TFIDF x`
 
-Where `x` is a table of parsed documents, returns for each document, a dictionary with the tokens as keys, and relevance as values.
+Where 
+
+-  `x` is a table of parsed documents
+
+returns for each document, a dictionary with the tokens as keys, and relevance as values.
 
 Extract a specific document and find the most significiant words in that document:
 
@@ -161,7 +165,11 @@ _Total TF-IDF scores for all terms within a corpus of documents_
 
 Syntax: `.nlp.TFIDF_tot x`
 
-Where `x` is a table of parsed documents, returns a dictionary with the tokens as keys, and relevance as values  in relation to the all documents within a corpus
+Where
+
+-  `x` is a table of parsed documents
+
+returns a dictionary with the tokens as keys, and relevance as values across all documents within the corpus
 
 ```q
 q)desc .nlp.TFIDF_tot[jeffcorpus]
@@ -217,7 +225,7 @@ Syntax: `.nlp.findRelatedTerms[x;y]`
 Where
 
 - `x` is a table of parsed documents
--   `y` is a symbol which is the token for which to find related terms
+- `y` is a symbol which is the token for which to find related terms
 
 returns a dictionary of the related tokens and their relevances.
 
@@ -266,15 +274,15 @@ q).nlp.extractPhrases[corpus;`captain]
 
 #### `.nlp.bi_gram`
 
-_An bi gram is used to determine the probability of a word appearing next in a sequence of words_
+_Bi grams are used to determine the probability of a word appearing next in a sequence of words_
 
-Syntax: `.nlp.bi_gram corpus`
+Syntax: `.nlp.bi_gram[corpus]`
 
 Where
 
 - `corpus` is a table of parsed documents
 
-returns a dictionary containing the probability of each 2 word sequence appearing in the corpus.
+returns a dictionary containing the probability that the secondary word in the sequence follows the primary word.
 
 ```q
 q).nlp.bi_gram corpus
@@ -290,5 +298,3 @@ little      money      | 0.004016064
 money       purse      | 0.07692308
 purse       particular | 0.1428571
 ```
-
-

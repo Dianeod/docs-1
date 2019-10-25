@@ -30,7 +30,7 @@ Where
 
 returns as a list of longs the document’s indexes, grouped into clusters.
 
-Cluster of Jeff Skillings emails, creates 370 clusters with the minimum threshold at 0.25:
+Setting a minimum similarity of 0.25 results in 370 clusters out of Jeff Skillings 2603 emails:
 
 ``` q
 q)clusterjeff:.nlp.cluster.MCL[jeffcorpus;0.25;0b]

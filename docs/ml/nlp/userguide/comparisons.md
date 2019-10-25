@@ -74,9 +74,10 @@ Where `dict1` and `dict2` are dictionaries that consist of the document‘s keyw
 
 Given the queried email defined above, and a random email from the corpus, we can calculate the cosine similarity between them.
 
-```q 
-q)queryemail2:jeffcorpus[rand count jeffcorpus]
-q).nlp.compareDocs[queryemail`keywords;queryemail2`keywords]
+```q
+q)email1:jeffcorpus[rand count jeffcorpus]
+q)email2:jeffcorpus[rand count jeffcorpus] 
+q).nlp.compareDocs[email1`keywords;email2`keywords]
 0.1163404
 ```
 

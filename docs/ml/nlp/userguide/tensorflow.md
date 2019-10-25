@@ -6,7 +6,7 @@ keywords: tensorflow, algorithm, analysis,corpus, document, learning, machine, m
 
 # <i class="fas fa-share-alt"></i> Tensorflow Text
 
-Tensorflow text can be used to perform preprocessing operations on text based data. This allows the preprocessed data to be integrated into a tensorflow machine learning workflow with ease. These operations include tokenization, sentiment analysis and extracting attributes from strings of text.
+Tensorflow text can be used to perform preprocessing operations on text based data. This allows the preprocessed data to be integrated into a tensorflow machine learning workflow with ease. Operations exposed within the NLP library from tensorflow include tokenization, sentiment analysis and extracting textual attributes from strings.
 
 ## Tokenization
 
@@ -21,7 +21,7 @@ Syntax: `.nlp.tf.tokenize[x;y]`
 Where 
 
 -  `x` is a string of text 
--  `y` is the version of tokenization
+-  `y` is the form of applied tokenization
 
 returns a list of the tokens extracted from the text
 
@@ -60,7 +60,7 @@ Where
 -  `tok` is the form of tokenization to be used
 -  `att` are the attributes to be identified in the text 
 
-returns a numerical value indicating the index that the attribute occured within the string of text. A token column is also added which includes the text split into its appropriate tokens.
+returns a table with rows cotaining lists of indices at which the attribute defined by the column occurs. A token column is also added which includes the text split into its appropriate tokens.
 
 The following are the optional attr values:
 
@@ -103,7 +103,7 @@ q)cols txtAtt
 
 ## Sentimental Analysis
 
-Using the same pre built model used in `.nlp.sentiment`, sentences can be scored for their negative, positve and neutral sentiment using tensorflow tokenization. 
+Using the same pre built model used by `.nlp.sentiment`, sentences can be scored for their negative, positve and neutral sentiment on data tokenized using tensorflow. 
 
 ### `.nlp.tf.sentiment`
 
@@ -114,7 +114,7 @@ Syntax: `.nlp.tf.sentiment[txt;tok]`
 Where 
 
 - `text` is a string 
-- `tok` is the form of tokenization to be implemented
+- `tok` is the form of tokenization to be applied
 
 returns a dictionary or table containing the sentiment of the text.
 
