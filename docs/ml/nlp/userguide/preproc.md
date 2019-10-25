@@ -274,7 +274,7 @@ q).nlp.extractPhrases[corpus;`captain]
 
 #### `.nlp.bi_gram`
 
-_Bi grams are used to determine the probability of a word appearing next in a sequence of words_
+_Determine the probability of a word appearing next in a sequence of words_
 
 Syntax: `.nlp.bi_gram[corpus]`
 
