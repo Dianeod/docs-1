@@ -188,11 +188,11 @@ q).nlp.rmv_master[(jeffemails`text)100;",.:?!/@'\n";""]
 "ReHow much to you have  SRSKevin Hannon  ENRON COMMUNICATIONS on 04202001 080314 AMcc  OK Sherri..
 ```
 
-### `.nlp.rmv_ascii`
+### `.nlp.ascii`
 
 _Remove any non-ascii characters from a string of text_
 
-Syntax: `.nlp.rmv_ascii[text]`
+Syntax: `.nlp.ascii[text]`
 
 Where
 
@@ -201,7 +201,7 @@ Where
 returns the string of text with all non ascii characters removed
 
 ```q
-q).nlp.rmv_ascii["This is ä senteñcê"]
+q).nlp.ascii["This is ä senteñcê"]
 "This is  sentec"
 ```
 
